@@ -1,7 +1,6 @@
 package com.dcard.gakki.api
 
-import io.reactivex.Single
-import retrofit2.Response
+import io.reactivex.Observable
 import retrofit2.http.GET
 import retrofit2.http.Query
 
@@ -10,7 +9,7 @@ interface PostListService {
     fun getCollectionPost(
             @Query("location") location: String,
             @Query("radius") radius: Int
-    ): Single<List<PostListModel>>
+    ): Observable<List<PostModel>>
 }
 
 

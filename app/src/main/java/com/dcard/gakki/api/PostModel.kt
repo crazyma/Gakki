@@ -1,6 +1,6 @@
 package com.dcard.gakki.api
 
-data class PostListModel(
+data class PostModel(
         var id: String,
         var postId: String,
         var title: String,
