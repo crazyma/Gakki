@@ -157,12 +157,57 @@ class MapsActivity : AppCompatActivity(),
     override fun onClusterItemClick(item: GakkiClusterItem): Boolean {
         Log.d("badu", "onClusterItemClick")
 
+        val list = mutableListOf<PostModel>()
+
+        mPostList?.forEach {
+            if(it.postId == item.postId){
+                list.add(it)
+            }
+        }
+
+        (recyclerView.adapter as GaggiListAdapter).dataList = list
+
+        mSheetBehavior?.run {
+            when (state) {
+                STATE_HIDDEN -> {
+                    this.state = STATE_COLLAPSED
+                }
+
+                else -> {
+                }
+            }
+        }
 
         return true
     }
 
     override fun onClusterClick(cluster: Cluster<GakkiClusterItem>): Boolean {
         Log.d("badu", "onClusterClick")
+
+        val list = mutableListOf<PostModel>()
+        cluster.items.forEach { it ->
+            val item = it!!
+            mPostList?.forEach {
+                if(it.postId == item.postId){
+                    list.add(it)
+                }
+            }
+        }
+
+        Log.d("badu", "cluster list : " + list.size)
+
+        (recyclerView.adapter as GaggiListAdapter).dataList = list
+
+        mSheetBehavior?.run {
+            when (state) {
+                STATE_HIDDEN -> {
+                    this.state = STATE_COLLAPSED
+                }
+
+                else -> {
+                }
+            }
+        }
 
         return true
     }
@@ -265,7 +310,10 @@ class MapsActivity : AppCompatActivity(),
             mClusterManager?.run {
 
                 postList.forEach {
-                    addItem(GakkiClusterItem(LatLng(it.latitude.toDouble(), it.longitude.toDouble())))
+                    addItem(GakkiClusterItem(
+                            LatLng(it.latitude.toDouble(), it.longitude.toDouble()),
+                            it.postId, it.title
+                    ))
                 }
 
             }
@@ -403,7 +451,7 @@ class MapsActivity : AppCompatActivity(),
             else -> 591657550.500000f
         }
 
-        return m/100f
+        return m / 100f
     }
 }
 

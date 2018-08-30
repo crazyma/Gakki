@@ -5,6 +5,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.dcard.gakki.R
+import com.dcard.gakki.api.PostModel
+import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.item_gakki_list.view.*
 
 class GakkiItemViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -15,7 +17,12 @@ class GakkiItemViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
                         R.layout.item_gakki_list, parent, false))
     }
 
-    fun bindTo(text: String){
-        itemView.titleTextView.text = text
+    fun bindTo(data: PostModel){
+        itemView.titleTextView.text = data.title
+        itemView.contentTextView.text = data.content
+        Picasso.get()
+                .load(data.thumbnail)
+                .fit()
+                .into(itemView.thumbnailImageView)
     }
 }

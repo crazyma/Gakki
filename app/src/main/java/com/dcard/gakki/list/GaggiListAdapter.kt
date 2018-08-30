@@ -5,6 +5,7 @@ import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.dcard.gakki.api.PostModel
 
 class GaggiListAdapter(
 
@@ -21,7 +22,11 @@ class GaggiListAdapter(
         const val ITEM_TYPE_TITLE = 0x02
     }
 
-    var dataList: List<String>? = listOf("111","222","333","444","555","666","777","111","222","333","444","555","666","777")
+    var dataList: List<PostModel>? = null
+        set(value) {
+            field = value
+            notifyDataSetChanged()
+        }
 
     var listener: OnItemClickListener? = null
 
