@@ -18,9 +18,15 @@ import kotlinx.android.synthetic.main.layout_test.*
 import android.support.design.widget.BottomSheetBehavior
 import android.support.design.widget.BottomSheetBehavior.*
 import android.support.v7.widget.LinearLayoutManager
+import com.dcard.gakki.api.PostListService
 import com.dcard.gakki.list.GaggiListAdapter
 import com.google.maps.android.clustering.Cluster
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.layout_bottom_sheet_list.*
+import retrofit2.Retrofit
+import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
+import retrofit2.converter.gson.GsonConverterFactory
 
 
 /**
@@ -125,6 +131,8 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, ClusterManager.OnC
 
         setupCluster()
 
+        loadApi()
+
 //        mMap.addMarker(
 //                MarkerOptions().position(sydney).title("Marker in Sydney")
 //        )
@@ -142,6 +150,24 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, ClusterManager.OnC
         Log.d("badu","onClusterClick")
 
         return true
+    }
+
+    private fun loadApi(){
+        val reprofit = Retrofit.Builder()
+                .addConverterFactory(GsonConverterFactory.create())
+                .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
+                .baseUrl("http://35.194.137.25:3100/hackathon/")
+                .build()
+
+        val service = reprofit.create(PostListService::class.java)
+        service.getCollectionPost("25.041651,121.544041",1000)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe({
+                    Log.d("badu","success size : " + it.size + " | " + it[0].title )
+                },{
+                    Log.d("badu","fail")
+                })
     }
 
     private fun setupMapListener() {
