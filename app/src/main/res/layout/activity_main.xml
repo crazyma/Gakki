@@ -30,6 +30,6 @@
         android:layout_height="match_parent"/>
 
     <!-- Adding bottom sheet after main content -->
-    <include layout="@layout/layout_bottom_sheet" />
+    <include layout="@layout/layout_bottom_sheet_list" />
 
 </android.support.design.widget.CoordinatorLayout>

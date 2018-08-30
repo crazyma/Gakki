@@ -17,8 +17,8 @@ import com.google.maps.android.clustering.ClusterManager
 import kotlinx.android.synthetic.main.layout_bottom_sheet.*
 import kotlinx.android.synthetic.main.layout_test.*
 import android.support.design.widget.BottomSheetBehavior
-import android.support.design.widget.BottomSheetBehavior.STATE_COLLAPSED
-import android.support.design.widget.BottomSheetBehavior.STATE_HIDDEN
+import android.support.design.widget.BottomSheetBehavior.*
+import kotlinx.android.synthetic.main.layout_bottom_sheet_list.*
 
 
 /**
@@ -37,29 +37,58 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        // Obtain the SupportMapFragment and get notified when the map is ready to be used.
-        val mapFragment = supportFragmentManager
-                .findFragmentById(R.id.map) as SupportMapFragment
-        mapFragment.getMapAsync(this)
-        mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this)
 
+        setupMap()
 
-        mSheetBehavior = BottomSheetBehavior.from(bottomSheet)
+        setupBottomSheet()
 
         button.setOnClickListener {
-            Log.d("badu","XD")
+            Log.d("badu", "XD")
             mSheetBehavior?.run {
-                when(state){
+                when (state) {
                     STATE_HIDDEN -> {
                         this.state = STATE_COLLAPSED
                     }
 
-                    else -> {}
+                    else -> {
+                    }
                 }
             }
         }
     }
 
+    private fun setupMap() {
+        // Obtain the SupportMapFragment and get notified when the map is ready to be used.
+        val mapFragment = supportFragmentManager
+                .findFragmentById(R.id.map) as SupportMapFragment
+        mapFragment.getMapAsync(this)
+        mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this)
+    }
+
+    private fun setupBottomSheet() {
+        mSheetBehavior = BottomSheetBehavior.from(bottomSheetBase)
+    }
+
+    override fun onBackPressed() {
+
+        mSheetBehavior?.run {
+            when (state) {
+                STATE_EXPANDED -> {
+                    state = STATE_COLLAPSED
+                }
+
+                STATE_COLLAPSED -> {
+                    state = STATE_HIDDEN
+                }
+
+                else -> {
+                    super.onBackPressed()
+                }
+            }
+        } ?: run {
+            super.onBackPressed()
+        }
+    }
 
 
     /**
@@ -71,7 +100,6 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
      * it inside the SupportMapFragment. This method will only be triggered once the user has
      * installed Google Play services and returned to the app.
      */
-
     override fun onMapReady(googleMap: GoogleMap) {
         mMap = googleMap
 
@@ -79,7 +107,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
 
         getDeviceLocation()
 
-        setupListener()
+        setupMapListener()
 
         setupCluster()
 
@@ -89,7 +117,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
 //        mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney))
     }
 
-    private fun setupListener() {
+    private fun setupMapListener() {
 
         mMap.setOnCameraMoveListener {
             Log.d("badu", "camera move")
@@ -117,19 +145,19 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         addItemToCluster()
     }
 
-    private fun addItemToCluster(){
+    private fun addItemToCluster() {
 
-        mClusterManager?.run{
+        mClusterManager?.run {
 
-            addItem(GakkiClusterItem(LatLng(25.073184697300164,121.51969324797392)))
-            addItem(GakkiClusterItem(LatLng(25.072380544381666,121.51840344071388)))
-            addItem(GakkiClusterItem(LatLng(25.06792632834905,121.51950985193253)))
-            addItem(GakkiClusterItem(LatLng(25.06693810028716,121.52444478124382)))
-            addItem(GakkiClusterItem(LatLng(25.070801680447058,121.52446053922176)))
-            addItem(GakkiClusterItem(LatLng(25.077315615627185,121.52225375175475)))
-            addItem(GakkiClusterItem(LatLng(25.076663630355,121.51596732437609)))
-            addItem(GakkiClusterItem(LatLng(25.070844196765062,121.51124596595764)))
-            addItem(GakkiClusterItem(LatLng(25.066656268573674,121.51652187108995)))
+            addItem(GakkiClusterItem(LatLng(25.073184697300164, 121.51969324797392)))
+            addItem(GakkiClusterItem(LatLng(25.072380544381666, 121.51840344071388)))
+            addItem(GakkiClusterItem(LatLng(25.06792632834905, 121.51950985193253)))
+            addItem(GakkiClusterItem(LatLng(25.06693810028716, 121.52444478124382)))
+            addItem(GakkiClusterItem(LatLng(25.070801680447058, 121.52446053922176)))
+            addItem(GakkiClusterItem(LatLng(25.077315615627185, 121.52225375175475)))
+            addItem(GakkiClusterItem(LatLng(25.076663630355, 121.51596732437609)))
+            addItem(GakkiClusterItem(LatLng(25.070844196765062, 121.51124596595764)))
+            addItem(GakkiClusterItem(LatLng(25.066656268573674, 121.51652187108995)))
 
         }
     }
