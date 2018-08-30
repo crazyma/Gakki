@@ -13,6 +13,8 @@ import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
+import com.google.maps.android.clustering.ClusterManager
+
 
 /**
  * https://developers.google.com/maps/documentation/android-sdk/current-place-tutorial
@@ -23,7 +25,8 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
 
     private lateinit var mMap: GoogleMap
     private lateinit var mFusedLocationProviderClient: FusedLocationProviderClient
-    private var mLastKnownLocation : Location?  =null
+    private var mLastKnownLocation: Location? = null
+    private var mClusterManager: ClusterManager<GakkiClusterItem>? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -54,26 +57,56 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
 
         setupListener()
 
+        setupCluster()
+
 //        mMap.addMarker(
 //                MarkerOptions().position(sydney).title("Marker in Sydney")
 //        )
 //        mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney))
     }
 
-    private fun setupListener(){
+    private fun setupListener() {
+
         mMap.setOnCameraMoveListener {
-            Log.d("badu","camera move")
+            Log.d("badu", "camera move")
         }
 
         mMap.setOnCameraMoveStartedListener {
-            Log.d("badu","camera move start")
+            Log.d("badu", "camera move start")
         }
 
         mMap.setOnCameraIdleListener {
 
             val latlon = mMap.cameraPosition.target
             val zoom = mMap.cameraPosition.zoom
-            Log.d("badu","camera idle | latlen $latlon , zoom : $zoom")
+            Log.d("badu", "camera idle | latlen $latlon , zoom : $zoom")
+        }
+    }
+
+    private fun setupCluster() {
+
+        mMap.run {
+            mClusterManager = ClusterManager(this@MapsActivity, this)
+            setOnCameraIdleListener(mClusterManager)
+        }
+
+        addItemToCluster()
+    }
+
+    private fun addItemToCluster(){
+
+        mClusterManager?.run{
+
+            addItem(GakkiClusterItem(LatLng(25.073184697300164,121.51969324797392)))
+            addItem(GakkiClusterItem(LatLng(25.072380544381666,121.51840344071388)))
+            addItem(GakkiClusterItem(LatLng(25.06792632834905,121.51950985193253)))
+            addItem(GakkiClusterItem(LatLng(25.06693810028716,121.52444478124382)))
+            addItem(GakkiClusterItem(LatLng(25.070801680447058,121.52446053922176)))
+            addItem(GakkiClusterItem(LatLng(25.077315615627185,121.52225375175475)))
+            addItem(GakkiClusterItem(LatLng(25.076663630355,121.51596732437609)))
+            addItem(GakkiClusterItem(LatLng(25.070844196765062,121.51124596595764)))
+            addItem(GakkiClusterItem(LatLng(25.066656268573674,121.51652187108995)))
+
         }
     }
 
@@ -105,13 +138,13 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         val locationResult = mFusedLocationProviderClient.lastLocation
 
         locationResult.addOnCompleteListener {
-            if(it.isSuccessful){
+            if (it.isSuccessful) {
                 mLastKnownLocation = it.result as Location
                 mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(
                         LatLng(mLastKnownLocation!!.latitude,
-                                mLastKnownLocation!!.longitude),DEFAULT_ZOOM))
-            }else{
-                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(LatLng(-34.0, 151.0),DEFAULT_ZOOM))
+                                mLastKnownLocation!!.longitude), DEFAULT_ZOOM))
+            } else {
+                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(LatLng(-34.0, 151.0), DEFAULT_ZOOM))
                 mMap.uiSettings.isMyLocationButtonEnabled = false
             }
         }
