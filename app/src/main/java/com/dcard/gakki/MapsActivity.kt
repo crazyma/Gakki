@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.location.Location
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
@@ -47,17 +48,33 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
     override fun onMapReady(googleMap: GoogleMap) {
         mMap = googleMap
 
-        // Add a marker in Sydney and move the camera
-        val sydney = LatLng(-34.0, 151.0)
-
         updateLocationUI()
 
         getDeviceLocation()
+
+        setupListener()
 
 //        mMap.addMarker(
 //                MarkerOptions().position(sydney).title("Marker in Sydney")
 //        )
 //        mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney))
+    }
+
+    private fun setupListener(){
+        mMap.setOnCameraMoveListener {
+            Log.d("badu","camera move")
+        }
+
+        mMap.setOnCameraMoveStartedListener {
+            Log.d("badu","camera move start")
+        }
+
+        mMap.setOnCameraIdleListener {
+
+            val latlon = mMap.cameraPosition.target
+            val zoom = mMap.cameraPosition.zoom
+            Log.d("badu","camera idle | latlen $latlon , zoom : $zoom")
+        }
     }
 
     @SuppressLint("MissingPermission")
@@ -84,11 +101,6 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
 
     @SuppressLint("MissingPermission")
     private fun getDeviceLocation() {
-        /*
-     * Get the best and most recent location of the device, which may be null in rare
-     * cases when a location is not available.
-     */
-
 
         val locationResult = mFusedLocationProviderClient.lastLocation
 
@@ -147,3 +159,26 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
 
     }
 }
+
+/* scale to meter
+20 : 1128.497220
+19 : 2256.994440
+18 : 4513.988880
+17 : 9027.977761
+16 : 18055.955520
+15 : 36111.911040
+14 : 72223.822090
+13 : 144447.644200
+12 : 288895.288400
+11 : 577790.576700
+10 : 1155581.153000
+9  : 2311162.307000
+8  : 4622324.614000
+7  : 9244649.227000
+6  : 18489298.450000
+5  : 36978596.910000
+4  : 73957193.820000
+3  : 147914387.600000
+2  : 295828775.300000
+1  : 591657550.500000
+ */
