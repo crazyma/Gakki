@@ -31,6 +31,10 @@
             android:name=".MapsActivity"
             android:label="Gakki"
             android:theme="@style/AppTheme.NoActionBar">
+
+        </activity>
+
+        <activity android:name=".test.TestActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
