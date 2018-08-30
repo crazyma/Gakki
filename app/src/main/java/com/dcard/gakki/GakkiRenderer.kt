@@ -19,12 +19,13 @@ class GakkiRenderer(
 
     override fun onBeforeClusterItemRendered(item: GakkiClusterItem, markerOptions: MarkerOptions) {
         super.onBeforeClusterItemRendered(item, markerOptions)
-
+        /*
         val bitmap = BitmapFactory.decodeResource(context.resources,
                 R.drawable.small_icon)
 
         markerOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.small_icon
         )).title(item.title)
+        */
 
 
     }
