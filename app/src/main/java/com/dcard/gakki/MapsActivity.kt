@@ -18,13 +18,15 @@ import kotlinx.android.synthetic.main.layout_test.*
 import android.support.design.widget.BottomSheetBehavior
 import android.support.design.widget.BottomSheetBehavior.*
 import android.support.v7.widget.LinearLayoutManager
+import com.dcard.gakki.list.GaggiListAdapter
+import com.google.maps.android.clustering.Cluster
 import kotlinx.android.synthetic.main.layout_bottom_sheet_list.*
 
 
 /**
  * https://developers.google.com/maps/documentation/android-sdk/current-place-tutorial
  */
-class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
+class MapsActivity : AppCompatActivity(), OnMapReadyCallback, ClusterManager.OnClusterItemClickListener<GakkiClusterItem>, ClusterManager.OnClusterClickListener<GakkiClusterItem> {
 
     private val DEFAULT_ZOOM = 15f
 
@@ -129,6 +131,19 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
 //        mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney))
     }
 
+    override fun onClusterItemClick(item: GakkiClusterItem): Boolean {
+        Log.d("badu","onClusterItemClick")
+
+
+        return true
+    }
+
+    override fun onClusterClick(cluster: Cluster<GakkiClusterItem>): Boolean {
+        Log.d("badu","onClusterClick")
+
+        return true
+    }
+
     private fun setupMapListener() {
 
         mMap.setOnCameraMoveListener {
@@ -151,7 +166,13 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
 
         mMap.run {
             mClusterManager = ClusterManager(this@MapsActivity, this)
+            setOnMarkerClickListener(mClusterManager)
             setOnCameraIdleListener(mClusterManager)
+
+            mClusterManager?.run {
+                setOnClusterClickListener(this@MapsActivity)
+                setOnClusterItemClickListener(this@MapsActivity)
+            }
         }
 
         addItemToCluster()
