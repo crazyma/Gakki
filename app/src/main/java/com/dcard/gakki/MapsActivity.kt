@@ -33,7 +33,11 @@ import retrofit2.converter.gson.GsonConverterFactory
 /**
  * https://developers.google.com/maps/documentation/android-sdk/current-place-tutorial
  */
-class MapsActivity : AppCompatActivity(), OnMapReadyCallback, ClusterManager.OnClusterItemClickListener<GakkiClusterItem>, ClusterManager.OnClusterClickListener<GakkiClusterItem> {
+class MapsActivity : AppCompatActivity(),
+        OnMapReadyCallback,
+        ClusterManager.OnClusterItemClickListener<GakkiClusterItem>,
+        ClusterManager.OnClusterClickListener<GakkiClusterItem>,
+        GakkiRenderer.GakkiRendererListener {
 
     private val DEFAULT_ZOOM = 15f
 
@@ -43,6 +47,9 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, ClusterManager.OnC
     private var mClusterManager: ClusterManager<GakkiClusterItem>? = null
     private var mSheetBehavior: BottomSheetBehavior<*>? = null
     private var mPostList: List<PostModel>? = null
+    private var mLatitude: Double = 0.0
+    private var mLongitude: Double = 0.0
+    private lateinit var service: PostListService
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -82,7 +89,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, ClusterManager.OnC
         setupRecyclerView()
     }
 
-    private fun setupRecyclerView(){
+    private fun setupRecyclerView() {
         recyclerView.apply {
 
             setHasFixedSize(true)
@@ -127,15 +134,17 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, ClusterManager.OnC
     override fun onMapReady(googleMap: GoogleMap) {
         mMap = googleMap
 
-        updateLocationUI()
+        setupApiService()
 
-        getDeviceLocation()
+        updateLocationUI()
 
         setupMapListener()
 
         setupCluster()
 
-        loadApi()
+        getDeviceLocation()
+
+//        loadApi()
 
 //        mMap.addMarker(
 //                MarkerOptions().position(sydney).title("Marker in Sydney")
@@ -144,41 +153,55 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, ClusterManager.OnC
     }
 
     override fun onClusterItemClick(item: GakkiClusterItem): Boolean {
-        Log.d("badu","onClusterItemClick")
+        Log.d("badu", "onClusterItemClick")
 
 
         return true
     }
 
     override fun onClusterClick(cluster: Cluster<GakkiClusterItem>): Boolean {
-        Log.d("badu","onClusterClick")
+        Log.d("badu", "onClusterClick")
 
         return true
     }
 
+    override fun onGakkiCameraIdel() {
+
+        val latlon = mMap.cameraPosition.target
+        val zoom = mMap.cameraPosition.zoom
+        val latlonString = getLatlonString(latlon.latitude,latlon.longitude)
+
+        Log.d("badu", "gakki idle  #####  $latlonString")
+        loadApi(latlonString)
+    }
+
     private fun loadApi(
             location: String = "25.0478,121.5318",
-            radius: Int = 1000
-    ){
+            radius: Int = 1200
+    ) {
+        service.getCollectionPost(location, radius)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe({
+                    Log.d("badu", "success size : " + it.size + " | " + it[0].title)
+
+                    mPostList = it
+                    addItemToCluster()
+
+                }, {
+                    Log.w("badu", "fail")
+                    Log.e("badu",it.toString())
+                })
+    }
+
+    private fun setupApiService(){
         val reprofit = Retrofit.Builder()
                 .addConverterFactory(GsonConverterFactory.create())
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                 .baseUrl("http://35.194.137.25:3100/hackathon/")
                 .build()
 
-        val service = reprofit.create(PostListService::class.java)
-        service.getCollectionPost(location,radius)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe({
-                    Log.d("badu","success size : " + it.size + " | " + it[0].title )
-
-                    mPostList = it
-                    addItemToCluster()
-
-                },{
-                    Log.d("badu","fail")
-                })
+        service = reprofit.create(PostListService::class.java)
     }
 
     private fun setupMapListener() {
@@ -207,7 +230,9 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, ClusterManager.OnC
             setOnCameraIdleListener(mClusterManager)
 
             mClusterManager?.run {
-                renderer = GakkiRenderer(this@MapsActivity, this, mMap)
+                renderer = GakkiRenderer(this@MapsActivity, this, mMap).apply {
+                    listener = this@MapsActivity
+                }
                 setOnClusterClickListener(this@MapsActivity)
                 setOnClusterItemClickListener(this@MapsActivity)
             }
@@ -258,9 +283,13 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, ClusterManager.OnC
         locationResult.addOnCompleteListener {
             if (it.isSuccessful) {
                 mLastKnownLocation = it.result as Location
+                mLatitude = mLastKnownLocation!!.latitude
+                mLongitude = mLastKnownLocation!!.longitude
                 mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(
                         LatLng(mLastKnownLocation!!.latitude,
                                 mLastKnownLocation!!.longitude), DEFAULT_ZOOM))
+
+//                loadApi()
             } else {
                 mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(LatLng(-34.0, 151.0), DEFAULT_ZOOM))
                 mMap.uiSettings.isMyLocationButtonEnabled = false
@@ -307,6 +336,27 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, ClusterManager.OnC
 //        } catch (e: SecurityException) {
 //            Log.e("Exception: %s", e.message)
 //        }
+
+    }
+
+    private fun getLatlonString(lat: Double, lon: Double) : String{
+        val latString = lat.toString().run {
+            if(this.length < 8) {
+                this
+            }else {
+                this.substring(0,7)
+            }
+        }
+
+        val lonString = lon.toString().run {
+            if(this.length < 8) {
+                this
+            }else {
+                this.substring(0,7)
+            }
+        }
+
+        return "$latString,$lonString"
 
     }
 }

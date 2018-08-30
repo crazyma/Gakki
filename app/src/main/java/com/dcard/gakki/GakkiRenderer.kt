@@ -14,8 +14,13 @@ class GakkiRenderer(
         val context: Context,
         clusterManager: ClusterManager<GakkiClusterItem>,
         map: GoogleMap
-): DefaultClusterRenderer<GakkiClusterItem>(context,map,clusterManager) {
+): DefaultClusterRenderer<GakkiClusterItem>(context,map,clusterManager), GoogleMap.OnCameraIdleListener {
 
+    interface GakkiRendererListener{
+        fun onGakkiCameraIdel()
+    }
+
+    var listener: GakkiRendererListener? = null
 
     override fun onBeforeClusterItemRendered(item: GakkiClusterItem, markerOptions: MarkerOptions) {
         super.onBeforeClusterItemRendered(item, markerOptions)
@@ -30,4 +35,7 @@ class GakkiRenderer(
 
     }
 
+    override fun onCameraIdle() {
+        listener?.onGakkiCameraIdel()
+    }
 }
