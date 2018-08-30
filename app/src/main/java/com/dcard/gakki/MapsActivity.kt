@@ -14,6 +14,11 @@ import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import com.google.maps.android.clustering.ClusterManager
+import kotlinx.android.synthetic.main.layout_bottom_sheet.*
+import kotlinx.android.synthetic.main.layout_test.*
+import android.support.design.widget.BottomSheetBehavior
+import android.support.design.widget.BottomSheetBehavior.STATE_COLLAPSED
+import android.support.design.widget.BottomSheetBehavior.STATE_HIDDEN
 
 
 /**
@@ -27,6 +32,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
     private lateinit var mFusedLocationProviderClient: FusedLocationProviderClient
     private var mLastKnownLocation: Location? = null
     private var mClusterManager: ClusterManager<GakkiClusterItem>? = null
+    private var mSheetBehavior: BottomSheetBehavior<*>? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -36,7 +42,25 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
                 .findFragmentById(R.id.map) as SupportMapFragment
         mapFragment.getMapAsync(this)
         mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this)
+
+
+        mSheetBehavior = BottomSheetBehavior.from(bottomSheet)
+
+        button.setOnClickListener {
+            Log.d("badu","XD")
+            mSheetBehavior?.run {
+                when(state){
+                    STATE_HIDDEN -> {
+                        this.state = STATE_COLLAPSED
+                    }
+
+                    else -> {}
+                }
+            }
+        }
     }
+
+
 
     /**
      * Manipulates the map once available.
