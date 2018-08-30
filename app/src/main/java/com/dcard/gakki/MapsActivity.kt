@@ -73,6 +73,8 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, ClusterManager.OnC
                 .findFragmentById(R.id.map) as SupportMapFragment
         mapFragment.getMapAsync(this)
         mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this)
+
+
     }
 
     private fun setupBottomSheet() {
@@ -205,6 +207,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, ClusterManager.OnC
             setOnCameraIdleListener(mClusterManager)
 
             mClusterManager?.run {
+                renderer = GakkiRenderer(this@MapsActivity, this, mMap)
                 setOnClusterClickListener(this@MapsActivity)
                 setOnClusterItemClickListener(this@MapsActivity)
             }
