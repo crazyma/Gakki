@@ -21,6 +21,7 @@ import android.support.v7.widget.LinearLayoutManager
 import com.dcard.gakki.api.PostListService
 import com.dcard.gakki.api.PostModel
 import com.dcard.gakki.list.GaggiListAdapter
+import com.google.android.gms.common.util.ListUtils
 import com.google.maps.android.clustering.Cluster
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
@@ -50,6 +51,7 @@ class MapsActivity : AppCompatActivity(),
     private var mLatitude: Double = 0.0
     private var mLongitude: Double = 0.0
     private lateinit var service: PostListService
+    private val recordPostIdSet = HashSet<String>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -182,11 +184,28 @@ class MapsActivity : AppCompatActivity(),
         service.getCollectionPost(location, radius)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
+                .map { it ->
+                    val newList = mutableListOf<PostModel>()
+                    it.forEach{
+                        if(!recordPostIdSet.contains(it.id)){
+                            newList.add(it)
+                            recordPostIdSet.add(it.id)
+                        }
+                    }
+                    newList
+                }
                 .subscribe({
-                    Log.d("badu", "success size : " + it.size + " | " + it[0].title)
 
-                    mPostList = it
-                    addItemToCluster()
+                    val newList = mutableListOf<PostModel>()
+                    if(mPostList != null && !mPostList!!.isEmpty()) {
+                        newList.addAll(mPostList!!)
+                    }
+                    newList.addAll(it)
+
+                    mPostList = newList
+                    addItemToCluster(it)
+
+                    Log.d("badu", "success size : " + it.size + " | " + mPostList!!.size)
 
                 }, {
                     Log.w("badu", "fail")
@@ -241,11 +260,11 @@ class MapsActivity : AppCompatActivity(),
 //        addItemToCluster()
     }
 
-    private fun addItemToCluster() {
+    private fun addItemToCluster(postList: List<PostModel>) {
         mPostList?.run {
             mClusterManager?.run {
 
-                mPostList?.forEach {
+                postList.forEach {
                     addItem(GakkiClusterItem(LatLng(it.latitude.toDouble(), it.longitude.toDouble())))
                 }
 
