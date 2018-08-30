@@ -170,11 +170,11 @@ class MapsActivity : AppCompatActivity(),
     override fun onGakkiCameraIdel() {
 
         val latlon = mMap.cameraPosition.target
-        val zoom = mMap.cameraPosition.zoom
-        val latlonString = getLatlonString(latlon.latitude,latlon.longitude)
+        val zoom = getMeterByScale(mMap.cameraPosition.zoom)
+        val latlonString = getLatlonString(latlon.latitude, latlon.longitude)
 
         Log.d("badu", "gakki idle  #####  $latlonString")
-        loadApi(latlonString)
+        loadApi(latlonString, zoom.toInt())
     }
 
     private fun loadApi(
@@ -186,8 +186,8 @@ class MapsActivity : AppCompatActivity(),
                 .observeOn(AndroidSchedulers.mainThread())
                 .map { it ->
                     val newList = mutableListOf<PostModel>()
-                    it.forEach{
-                        if(!recordPostIdSet.contains(it.id)){
+                    it.forEach {
+                        if (!recordPostIdSet.contains(it.id)) {
                             newList.add(it)
                             recordPostIdSet.add(it.id)
                         }
@@ -197,7 +197,7 @@ class MapsActivity : AppCompatActivity(),
                 .subscribe({
 
                     val newList = mutableListOf<PostModel>()
-                    if(mPostList != null && !mPostList!!.isEmpty()) {
+                    if (mPostList != null && !mPostList!!.isEmpty()) {
                         newList.addAll(mPostList!!)
                     }
                     newList.addAll(it)
@@ -209,11 +209,11 @@ class MapsActivity : AppCompatActivity(),
 
                 }, {
                     Log.w("badu", "fail")
-                    Log.e("badu",it.toString())
+                    Log.e("badu", it.toString())
                 })
     }
 
-    private fun setupApiService(){
+    private fun setupApiService() {
         val reprofit = Retrofit.Builder()
                 .addConverterFactory(GsonConverterFactory.create())
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
@@ -358,25 +358,52 @@ class MapsActivity : AppCompatActivity(),
 
     }
 
-    private fun getLatlonString(lat: Double, lon: Double) : String{
+    private fun getLatlonString(lat: Double, lon: Double): String {
         val latString = lat.toString().run {
-            if(this.length < 8) {
+            if (this.length < 8) {
                 this
-            }else {
-                this.substring(0,7)
+            } else {
+                this.substring(0, 7)
             }
         }
 
         val lonString = lon.toString().run {
-            if(this.length < 8) {
+            if (this.length < 8) {
                 this
-            }else {
-                this.substring(0,7)
+            } else {
+                this.substring(0, 7)
             }
         }
 
         return "$latString,$lonString"
 
+    }
+
+    private fun getMeterByScale(scale: Float): Float {
+        val m = when {
+            scale >= 20 -> 1128.497220f
+            scale >= 19 -> 2256.994440f
+            scale >= 18 -> 4513.988880f
+            scale >= 17 -> 9027.977761f
+            scale >= 16 -> 18055.955520f
+            scale >= 15 -> 36111.911040f
+            scale >= 14 -> 72223.822090f
+            scale >= 13 -> 144447.644200f
+            scale >= 12 -> 288895.288400f
+            scale >= 11 -> 577790.576700f
+            scale >= 10 -> 1155581.153000f
+            scale >= 9 -> 2311162.307000f
+            scale >= 8 -> 4622324.614000f
+            scale >= 7 -> 9244649.227000f
+            scale >= 6 -> 18489298.450000f
+            scale >= 5 -> 36978596.910000f
+            scale >= 4 -> 73957193.820000f
+            scale >= 3 -> 147914387.600000f
+            scale >= 2 -> 295828775.300000f
+            else -> 591657550.500000f
+        }
+
+        return m/100f
     }
 }
 
