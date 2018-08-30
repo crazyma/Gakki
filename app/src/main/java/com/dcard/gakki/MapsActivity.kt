@@ -14,10 +14,10 @@ import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import com.google.maps.android.clustering.ClusterManager
-import kotlinx.android.synthetic.main.layout_bottom_sheet.*
 import kotlinx.android.synthetic.main.layout_test.*
 import android.support.design.widget.BottomSheetBehavior
 import android.support.design.widget.BottomSheetBehavior.*
+import android.support.v7.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.layout_bottom_sheet_list.*
 
 
@@ -67,6 +67,18 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
 
     private fun setupBottomSheet() {
         mSheetBehavior = BottomSheetBehavior.from(bottomSheetBase)
+        setupRecyclerView()
+    }
+
+    private fun setupRecyclerView(){
+        recyclerView.apply {
+
+            setHasFixedSize(true)
+
+            layoutManager = LinearLayoutManager(this@MapsActivity)
+            adapter = GaggiListAdapter(this@MapsActivity)
+
+        }
     }
 
     override fun onBackPressed() {
