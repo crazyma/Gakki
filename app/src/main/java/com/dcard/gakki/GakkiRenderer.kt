@@ -24,14 +24,40 @@ class GakkiRenderer(
 
     override fun onBeforeClusterItemRendered(item: GakkiClusterItem, markerOptions: MarkerOptions) {
         super.onBeforeClusterItemRendered(item, markerOptions)
-        /*
+
+
         val bitmap = BitmapFactory.decodeResource(context.resources,
-                R.drawable.small_icon)
+                R.drawable.level4)
 
-        markerOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.small_icon
+        markerOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.level4
         )).title(item.title)
-        */
 
+
+    }
+
+    override fun onBeforeClusterRendered(cluster: Cluster<GakkiClusterItem>, markerOptions: MarkerOptions) {
+        super.onBeforeClusterRendered(cluster, markerOptions)
+
+        val resId = when{
+            cluster.size >= 200 -> {
+                R.drawable.level1
+            }
+
+            cluster.size >= 50 -> {
+                R.drawable.level2
+            }
+
+            cluster.size >= 10 -> {
+                R.drawable.level3
+            }
+
+            else -> {
+                R.drawable.level4
+            }
+        }
+
+        markerOptions.icon(BitmapDescriptorFactory.fromResource(resId
+        )).title(cluster.items.first().title)
 
     }
 
