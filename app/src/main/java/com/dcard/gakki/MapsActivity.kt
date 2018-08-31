@@ -28,7 +28,7 @@ import com.squareup.picasso.Picasso
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.layout_bottom_sheet_list.*
-import kotlinx.android.synthetic.main.layout_single_post.*
+import kotlinx.android.synthetic.main.item_gakki_list_single.*
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory

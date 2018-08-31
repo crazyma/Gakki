@@ -23,7 +23,7 @@
         <include
             android:id="@+id/singleScrollView"
             android:visibility="gone"
-            layout="@layout/layout_single_post"/>
+            layout="@layout/item_gakki_list_single"/>
 
     <!--</ScrollView>-->
 
