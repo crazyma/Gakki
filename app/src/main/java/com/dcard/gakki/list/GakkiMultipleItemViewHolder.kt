@@ -20,10 +20,16 @@ class GakkiMultipleItemViewHolder(itemView: View) : RecyclerView.ViewHolder(item
     fun bindTo(data: PostModel){
         itemView.titleTextView.text = data.title
         itemView.contentTextView.text = data.content
-        Picasso.get()
-                .load(data.thumbnail)
-                .placeholder(R.drawable.background_gray)
-                .fit()
-                .into(itemView.thumbnailImageView)
+
+        if(data.thumbnail ==  null || data.thumbnail!!.isEmpty()){
+            itemView.thumbnailImageView.visibility = View.GONE
+        }else {
+            itemView.thumbnailImageView.visibility = View.VISIBLE
+            Picasso.get()
+                    .load(data.thumbnail)
+                    .placeholder(R.drawable.background_gray)
+                    .fit()
+                    .into(itemView.thumbnailImageView)
+        }
     }
 }
