@@ -2,6 +2,10 @@ package com.dcard.gakki
 
 import android.content.Context
 import android.graphics.BitmapFactory
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
+import android.view.LayoutInflater
+import android.widget.TextView
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.model.BitmapDescriptor
 import com.google.android.gms.maps.model.BitmapDescriptorFactory
@@ -9,6 +13,7 @@ import com.google.android.gms.maps.model.MarkerOptions
 import com.google.maps.android.clustering.Cluster
 import com.google.maps.android.clustering.ClusterManager
 import com.google.maps.android.clustering.view.DefaultClusterRenderer
+import com.google.maps.android.ui.IconGenerator
 
 class GakkiRenderer(
         val context: Context,
@@ -20,18 +25,30 @@ class GakkiRenderer(
         fun onGakkiCameraIdel()
     }
 
+    private val mIconGenerator = IconGenerator(context)
+    private var mTextView: TextView? = null
     var listener: GakkiRendererListener? = null
+
+    init {
+        val multiProfile = LayoutInflater.from(context).inflate(R.layout.layout_floor_2, null)
+        val TRANSPARENT_DRAWABLE = ColorDrawable(Color.TRANSPARENT)
+
+// Make the background of marker transparent
+//        mIconGenerator.setBackground(TRANSPARENT_DRAWABLE);
+        mTextView = multiProfile.findViewById(R.id.floorTextView)
+        mIconGenerator.setContentView(multiProfile)
+        mIconGenerator.setBackground(TRANSPARENT_DRAWABLE)
+    }
 
     override fun onBeforeClusterItemRendered(item: GakkiClusterItem, markerOptions: MarkerOptions) {
         super.onBeforeClusterItemRendered(item, markerOptions)
 
+//        markerOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.level4
+//        )).title(item.title)
 
-        val bitmap = BitmapFactory.decodeResource(context.resources,
-                R.drawable.level4)
-
-        markerOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.level4
-        )).title(item.title)
-
+        mTextView?.text = "8"
+        val icon = mIconGenerator.makeIcon()
+        markerOptions.icon(BitmapDescriptorFactory.fromBitmap(icon)).title(item.title)
 
     }
 
