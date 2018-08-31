@@ -14,5 +14,5 @@ data class PostModel(
         var publishedAt: String,
         var createdAt: String,
         var updatedAt: String,
-        var thumbnail: String
+        var thumbnail: String?
 )

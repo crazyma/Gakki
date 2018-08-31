@@ -14,4 +14,17 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
+    <!--<ScrollView-->
+        <!--android:id="@+id/singleScrollView"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="match_parent"-->
+        <!--android:visibility="gone">-->
+
+        <include
+            android:id="@+id/singleScrollView"
+            android:visibility="gone"
+            layout="@layout/layout_single_post"/>
+
+    <!--</ScrollView>-->
+
 </RelativeLayout>

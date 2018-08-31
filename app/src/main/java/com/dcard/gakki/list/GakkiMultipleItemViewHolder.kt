@@ -9,11 +9,11 @@ import com.dcard.gakki.api.PostModel
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.item_gakki_list.view.*
 
-class GakkiItemViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+class GakkiMultipleItemViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
     companion object {
         fun create(inflater: LayoutInflater, parent: ViewGroup) =
-                GakkiItemViewHolder(inflater.inflate(
+                GakkiMultipleItemViewHolder(inflater.inflate(
                         R.layout.item_gakki_list, parent, false))
     }
 
@@ -22,6 +22,7 @@ class GakkiItemViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         itemView.contentTextView.text = data.content
         Picasso.get()
                 .load(data.thumbnail)
+                .placeholder(R.drawable.background_gray)
                 .fit()
                 .into(itemView.thumbnailImageView)
     }

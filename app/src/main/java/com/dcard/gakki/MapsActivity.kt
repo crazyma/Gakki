@@ -18,14 +18,17 @@ import kotlinx.android.synthetic.main.layout_test.*
 import android.support.design.widget.BottomSheetBehavior
 import android.support.design.widget.BottomSheetBehavior.*
 import android.support.v7.widget.LinearLayoutManager
+import android.view.View
 import com.dcard.gakki.api.PostListService
 import com.dcard.gakki.api.PostModel
 import com.dcard.gakki.list.GaggiListAdapter
 import com.google.android.gms.common.util.ListUtils
 import com.google.maps.android.clustering.Cluster
+import com.squareup.picasso.Picasso
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.layout_bottom_sheet_list.*
+import kotlinx.android.synthetic.main.layout_single_post.*
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
@@ -165,18 +168,20 @@ class MapsActivity : AppCompatActivity(),
             }
         }
 
-        (recyclerView.adapter as GaggiListAdapter).dataList = list
+        updateBottomSheet(list)
 
-        mSheetBehavior?.run {
-            when (state) {
-                STATE_HIDDEN -> {
-                    this.state = STATE_COLLAPSED
-                }
-
-                else -> {
-                }
-            }
-        }
+//        (recyclerView.adapter as GaggiListAdapter).dataList = list
+//
+//        mSheetBehavior?.run {
+//            when (state) {
+//                STATE_HIDDEN -> {
+//                    this.state = STATE_COLLAPSED
+//                }
+//
+//                else -> {
+//                }
+//            }
+//        }
 
         return true
     }
@@ -185,6 +190,7 @@ class MapsActivity : AppCompatActivity(),
         Log.d("badu", "onClusterClick")
 
         val list = mutableListOf<PostModel>()
+
         cluster.items.forEach { it ->
             val item = it!!
             mPostList?.forEach {
@@ -196,18 +202,7 @@ class MapsActivity : AppCompatActivity(),
 
         Log.d("badu", "cluster list : " + list.size)
 
-        (recyclerView.adapter as GaggiListAdapter).dataList = list
-
-        mSheetBehavior?.run {
-            when (state) {
-                STATE_HIDDEN -> {
-                    this.state = STATE_COLLAPSED
-                }
-
-                else -> {
-                }
-            }
-        }
+        updateBottomSheet(list)
 
         return true
     }
@@ -220,6 +215,47 @@ class MapsActivity : AppCompatActivity(),
 
         Log.d("badu", "gakki idle  #####  $latlonString")
         loadApi(latlonString, zoom.toInt())
+    }
+
+    private fun updateBottomSheet(list: List<PostModel>){
+        recyclerView.visibility = View.VISIBLE
+        singleScrollView.visibility = View.GONE
+
+        (recyclerView.adapter as GaggiListAdapter).dataList = list
+
+        mSheetBehavior?.run {
+            when (state) {
+                STATE_HIDDEN -> {
+                    this.state = STATE_COLLAPSED
+                }
+
+                else -> {
+                }
+            }
+        }
+    }
+
+    private fun updateBottomSheet(postModel: PostModel){
+        recyclerView.visibility = View.GONE
+        singleScrollView.visibility = View.VISIBLE
+
+        singleTitleTextView.text = postModel.title
+        singleContentTextView.text = postModel.content
+        Picasso.get()
+                .load(postModel.thumbnail)
+                .fit()
+                .into(singlePhotoImageView)
+
+        mSheetBehavior?.run {
+            when (state) {
+                STATE_HIDDEN -> {
+                    this.state = STATE_COLLAPSED
+                }
+
+                else -> {
+                }
+            }
+        }
     }
 
     private fun loadApi(

@@ -11,15 +11,15 @@ class GaggiListAdapter(
 
         private val context: Context
 
-): RecyclerView.Adapter<RecyclerView.ViewHolder>(){
+) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     interface OnItemClickListener {
         fun onItemClick(view: View, position: Int, id: Int)
     }
 
     companion object {
-        const val ITEM_TYPE_ROW = 0x01
-        const val ITEM_TYPE_TITLE = 0x02
+        const val ITEM_TYPE_SINGLE = 0x01
+        const val ITEM_TYPE_MULTIPLE = 0x02
     }
 
     var dataList: List<PostModel>? = null
@@ -30,10 +30,21 @@ class GaggiListAdapter(
 
     var listener: OnItemClickListener? = null
 
+    override fun getItemViewType(position: Int): Int {
+        return if (dataList != null && dataList!!.size > 1) {
+            ITEM_TYPE_MULTIPLE
+        } else {
+            ITEM_TYPE_SINGLE
+        }
+    }
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         val layoutInflater = LayoutInflater.from(context)
 
-        return GakkiItemViewHolder.create(layoutInflater, parent)
+        return when(viewType){
+            ITEM_TYPE_MULTIPLE -> GakkiMultipleItemViewHolder.create(layoutInflater, parent)
+            else -> GakkiSingleItemViewHolder.create(layoutInflater, parent)
+        }
     }
 
     override fun getItemCount() = dataList?.size ?: 0
@@ -41,7 +52,11 @@ class GaggiListAdapter(
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder?, position: Int) {
         val data = dataList!![position]
         when (holder) {
-            is GakkiItemViewHolder -> {
+            is GakkiMultipleItemViewHolder -> {
+                holder.bindTo(data)
+            }
+
+            is GakkiSingleItemViewHolder -> {
                 holder.bindTo(data)
             }
 
