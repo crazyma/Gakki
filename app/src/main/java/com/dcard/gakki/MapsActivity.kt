@@ -345,8 +345,10 @@ class MapsActivity : AppCompatActivity(),
                             LatLng(it.latitude.toDouble(), it.longitude.toDouble()),
                             it.postId, it.title
                     ))
+
                 }
 
+                this.cluster()
             }
         }
     }
