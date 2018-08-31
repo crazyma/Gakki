@@ -218,6 +218,7 @@ class MapsActivity : AppCompatActivity(),
         singleScrollView.visibility = View.GONE
 
         (recyclerView.adapter as GaggiListAdapter).dataList = list
+        recyclerView.scrollToPosition(0)
 
         mSheetBehavior?.run {
             when (state) {
