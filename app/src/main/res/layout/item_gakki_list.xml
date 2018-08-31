@@ -7,15 +7,15 @@
 
     <ImageView
         android:id="@+id/thumbnailImageView"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
+        android:layout_width="68dp"
+        android:layout_height="68dp"
         android:layout_alignParentEnd="true"
         android:layout_centerVertical="true"
         android:layout_marginBottom="16dp"
         android:layout_marginEnd="16dp"
         android:layout_marginTop="16dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintDimensionRatio="h,1:1"
+        app:layout_constraintDimensionRatio=""
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 

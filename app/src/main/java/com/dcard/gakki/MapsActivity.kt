@@ -97,8 +97,6 @@ class MapsActivity : AppCompatActivity(),
     private fun setupRecyclerView() {
         recyclerView.apply {
 
-            setHasFixedSize(true)
-
             layoutManager = LinearLayoutManager(this@MapsActivity)
             adapter = GaggiListAdapter(this@MapsActivity)
 
