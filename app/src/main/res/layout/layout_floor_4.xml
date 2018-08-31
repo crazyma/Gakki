@@ -7,25 +7,25 @@
     android:layout_height="wrap_content">
 
     <ImageView
-        android:id="@+id/floorImageView2"
+        android:id="@+id/floorImageView4"
         android:layout_width="55dp"
-        android:layout_height="149dp"
+        android:layout_height="213dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/f2_m_c" />
+        app:srcCompat="@drawable/f4_m_c" />
 
     <TextView
-        android:id="@+id/floorTextView2"
+        android:id="@+id/floorTextView4"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="12dp"
         android:textAlignment="center"
         android:textColor="#DC5A64"
         android:textStyle="bold"
-        app:layout_constraintEnd_toEndOf="@+id/floorImageView2"
-        app:layout_constraintStart_toStartOf="@+id/floorImageView2"
-        app:layout_constraintTop_toTopOf="@+id/floorImageView2"
+        app:layout_constraintEnd_toEndOf="@+id/floorImageView4"
+        app:layout_constraintStart_toStartOf="@+id/floorImageView4"
+        app:layout_constraintTop_toTopOf="@+id/floorImageView4"
         tools:text="4" />
 </android.support.constraint.ConstraintLayout>

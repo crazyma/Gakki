@@ -25,19 +25,42 @@ class GakkiRenderer(
         fun onGakkiCameraIdel()
     }
 
-    private val mIconGenerator = IconGenerator(context)
-    private var mTextView: TextView? = null
+    private val mIconGenerator1 = IconGenerator(context)
+    private val mIconGenerator2 = IconGenerator(context)
+    private val mIconGenerator3 = IconGenerator(context)
+    private val mIconGenerator4 = IconGenerator(context)
+    private var mTextView1: TextView? = null
+    private var mTextView2: TextView? = null
+    private var mTextView3: TextView? = null
+    private var mTextView4: TextView? = null
     var listener: GakkiRendererListener? = null
 
     init {
-        val multiProfile = LayoutInflater.from(context).inflate(R.layout.layout_floor_2, null)
         val TRANSPARENT_DRAWABLE = ColorDrawable(Color.TRANSPARENT)
 
-// Make the background of marker transparent
-//        mIconGenerator.setBackground(TRANSPARENT_DRAWABLE);
-        mTextView = multiProfile.findViewById(R.id.floorTextView)
-        mIconGenerator.setContentView(multiProfile)
-        mIconGenerator.setBackground(TRANSPARENT_DRAWABLE)
+        val floor1Layout = LayoutInflater.from(context).inflate(R.layout.layout_floor_1, null)
+        val floor2Layout = LayoutInflater.from(context).inflate(R.layout.layout_floor_2, null)
+        val floor3Layout = LayoutInflater.from(context).inflate(R.layout.layout_floor_3, null)
+        val floor4Layout = LayoutInflater.from(context).inflate(R.layout.layout_floor_4, null)
+
+
+        mTextView1 = floor1Layout.findViewById(R.id.floorTextView1)
+        mTextView2 = floor2Layout.findViewById(R.id.floorTextView2)
+        mTextView3 = floor3Layout.findViewById(R.id.floorTextView3)
+        mTextView4 = floor4Layout.findViewById(R.id.floorTextView4)
+
+        mIconGenerator1.setContentView(floor1Layout)
+        mIconGenerator1.setBackground(TRANSPARENT_DRAWABLE)
+
+        mIconGenerator2.setContentView(floor2Layout)
+        mIconGenerator2.setBackground(TRANSPARENT_DRAWABLE)
+
+        mIconGenerator3.setContentView(floor3Layout)
+        mIconGenerator3.setBackground(TRANSPARENT_DRAWABLE)
+
+        mIconGenerator4.setContentView(floor4Layout)
+        mIconGenerator4.setBackground(TRANSPARENT_DRAWABLE)
+
     }
 
     override fun onBeforeClusterItemRendered(item: GakkiClusterItem, markerOptions: MarkerOptions) {
@@ -46,8 +69,8 @@ class GakkiRenderer(
 //        markerOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.level4
 //        )).title(item.title)
 
-        mTextView?.text = "8"
-        val icon = mIconGenerator.makeIcon()
+        mTextView1?.text = "1"
+        val icon = mIconGenerator1.makeIcon()
         markerOptions.icon(BitmapDescriptorFactory.fromBitmap(icon)).title(item.title)
 
     }
@@ -55,26 +78,29 @@ class GakkiRenderer(
     override fun onBeforeClusterRendered(cluster: Cluster<GakkiClusterItem>, markerOptions: MarkerOptions) {
         super.onBeforeClusterRendered(cluster, markerOptions)
 
-        val resId = when{
+        val icon = when{
             cluster.size >= 200 -> {
-                R.drawable.level1
+                mTextView4?.text = cluster.size.toString()
+                mIconGenerator4.makeIcon()
             }
 
             cluster.size >= 50 -> {
-                R.drawable.level2
+                mTextView3?.text = cluster.size.toString()
+                mIconGenerator3.makeIcon()
             }
 
             cluster.size >= 10 -> {
-                R.drawable.level3
+                mTextView2?.text = cluster.size.toString()
+                mIconGenerator2.makeIcon()
             }
 
             else -> {
-                R.drawable.level4
+                mTextView1?.text = cluster.size.toString()
+                mIconGenerator1.makeIcon()
             }
         }
 
-        markerOptions.icon(BitmapDescriptorFactory.fromResource(resId
-        )).title(cluster.items.first().title)
+        markerOptions.icon(BitmapDescriptorFactory.fromBitmap(icon)).title(cluster.items.first().title)
 
     }
 
