@@ -64,19 +64,19 @@ class MapsActivity : AppCompatActivity(),
 
         setupBottomSheet()
 
-        button.setOnClickListener {
-            Log.d("badu", "XD")
-            mSheetBehavior?.run {
-                when (state) {
-                    STATE_HIDDEN -> {
-                        this.state = STATE_COLLAPSED
-                    }
-
-                    else -> {
-                    }
-                }
-            }
-        }
+//        button.setOnClickListener {
+//            Log.d("badu", "XD")
+//            mSheetBehavior?.run {
+//                when (state) {
+//                    STATE_HIDDEN -> {
+//                        this.state = STATE_COLLAPSED
+//                    }
+//
+//                    else -> {
+//                    }
+//                }
+//            }
+//        }
     }
 
     private fun setupMap() {
