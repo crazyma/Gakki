@@ -158,7 +158,6 @@ class MapsActivity : AppCompatActivity(),
     }
 
     override fun onClusterItemClick(item: GakkiClusterItem): Boolean {
-        Log.d("badu", "onClusterItemClick")
 
         val list = mutableListOf<PostModel>()
 
@@ -187,7 +186,6 @@ class MapsActivity : AppCompatActivity(),
     }
 
     override fun onClusterClick(cluster: Cluster<GakkiClusterItem>): Boolean {
-        Log.d("badu", "onClusterClick")
 
         val list = mutableListOf<PostModel>()
 
@@ -213,7 +211,7 @@ class MapsActivity : AppCompatActivity(),
         val zoom = getMeterByScale(mMap.cameraPosition.zoom)
         val latlonString = getLatlonString(latlon.latitude, latlon.longitude)
 
-        Log.d("badu", "gakki idle  #####  $latlonString")
+//        Log.d("badu", "gakki idle  #####  $latlonString")
         loadApi(latlonString, zoom.toInt())
     }
 
@@ -289,7 +287,6 @@ class MapsActivity : AppCompatActivity(),
                     Log.d("badu", "success size : " + it.size + " | " + mPostList!!.size)
 
                 }, {
-                    Log.w("badu", "fail")
                     Log.e("badu", it.toString())
                 })
     }
@@ -307,11 +304,11 @@ class MapsActivity : AppCompatActivity(),
     private fun setupMapListener() {
 
         mMap.setOnCameraMoveListener {
-            Log.d("badu", "camera move")
+//            Log.d("badu", "camera move")
         }
 
         mMap.setOnCameraMoveStartedListener {
-            Log.d("badu", "camera move start")
+//            Log.d("badu", "camera move start")
         }
 
         mMap.setOnCameraIdleListener {
