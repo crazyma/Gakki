@@ -28,7 +28,7 @@ import com.squareup.picasso.Picasso
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.layout_bottom_sheet_list.*
-import kotlinx.android.synthetic.main.layout_single_post.*
+import kotlinx.android.synthetic.main.item_gakki_list_single.*
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
@@ -96,8 +96,6 @@ class MapsActivity : AppCompatActivity(),
 
     private fun setupRecyclerView() {
         recyclerView.apply {
-
-            setHasFixedSize(true)
 
             layoutManager = LinearLayoutManager(this@MapsActivity)
             adapter = GaggiListAdapter(this@MapsActivity)
@@ -220,6 +218,7 @@ class MapsActivity : AppCompatActivity(),
         singleScrollView.visibility = View.GONE
 
         (recyclerView.adapter as GaggiListAdapter).dataList = list
+        recyclerView.scrollToPosition(0)
 
         mSheetBehavior?.run {
             when (state) {
@@ -347,8 +346,10 @@ class MapsActivity : AppCompatActivity(),
                             LatLng(it.latitude.toDouble(), it.longitude.toDouble()),
                             it.postId, it.title
                     ))
+
                 }
 
+                this.cluster()
             }
         }
     }

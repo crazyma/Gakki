@@ -7,14 +7,14 @@ import android.view.ViewGroup
 import com.dcard.gakki.R
 import com.dcard.gakki.api.PostModel
 import com.squareup.picasso.Picasso
-import kotlinx.android.synthetic.main.layout_single_post.view.*
+import kotlinx.android.synthetic.main.item_gakki_list_single.view.*
 
 class GakkiSingleItemViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
     companion object {
         fun create(inflater: LayoutInflater, parent: ViewGroup) =
                 GakkiSingleItemViewHolder(inflater.inflate(
-                        R.layout.layout_single_post, parent, false))
+                        R.layout.item_gakki_list_single, parent, false))
     }
 
     fun bindTo(data: PostModel){
@@ -22,14 +22,15 @@ class GakkiSingleItemViewHolder(itemView: View) : RecyclerView.ViewHolder(itemVi
         itemView.singleContentTextView.text = data.content
 
         if(data.thumbnail == null || data.thumbnail!!.isEmpty()){
-            itemView.singlePhotoImageView.visibility = View.GONE
+            itemView.singleCardView.visibility = View.GONE
         }else{
-            itemView.singlePhotoImageView.visibility = View.VISIBLE
+            itemView.singleCardView.visibility = View.VISIBLE
 
             Picasso.get()
                     .load(data.thumbnail)
                     .placeholder(R.drawable.background_gray)
                     .fit()
+                    .centerCrop()
                     .into(itemView.singlePhotoImageView)
         }
     }
