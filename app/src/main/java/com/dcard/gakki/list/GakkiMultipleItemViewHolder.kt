@@ -22,13 +22,14 @@ class GakkiMultipleItemViewHolder(itemView: View) : RecyclerView.ViewHolder(item
         itemView.contentTextView.text = data.content
 
         if(data.thumbnail ==  null || data.thumbnail!!.isEmpty()){
-            itemView.thumbnailImageView.visibility = View.GONE
+            itemView.cardView.visibility = View.GONE
         }else {
-            itemView.thumbnailImageView.visibility = View.VISIBLE
+            itemView.cardView.visibility = View.VISIBLE
             Picasso.get()
                     .load(data.thumbnail)
                     .placeholder(R.drawable.background_gray)
                     .fit()
+                    .centerCrop()
                     .into(itemView.thumbnailImageView)
         }
     }
